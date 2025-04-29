@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      - job_name: 'proxysql'
+        scrape_interval: 3s
+        metrics_path: /metrics
+        scheme: http
+        static_configs:
+          - targets: ['proxysql:6070']
+      - job_name: 'flask-app1'
+        scrape_interval: 3s
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['flask-app1-service:8081']
+      - job_name: 'flask-app2'
+        scrape_interval: 3s
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['flask-app2-service:8082']

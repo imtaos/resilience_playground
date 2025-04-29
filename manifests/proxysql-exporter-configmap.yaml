@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxysql-exporter-config
+data:
+  config.yml: |
+    proxysql:
+      host: proxysql
+      port: 6032
+      username: admin
+      password: admin

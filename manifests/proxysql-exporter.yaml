@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxysql-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxysql-exporter
+  template:
+    metadata:
+      labels:
+        app: proxysql-exporter
+    spec:
+      containers:
+      - name: proxysql-exporter
+        image: nilebox/proxysql-exporter:latest
+        ports:
+        - containerPort: 42004
+          name: metrics
+        args:
+        - --web.listen-address=:42004
+        - --proxysql.address=proxysql:6032
+        - --proxysql.username=admin
+        - --proxysql.password=admin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxysql-exporter
+  labels:
+    app: proxysql-exporter
+spec:
+  selector:
+    app: proxysql-exporter
+  ports:
+  - name: metrics
+    port: 42004
+    targetPort: metrics

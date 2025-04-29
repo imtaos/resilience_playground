@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxysql-config
+data:
+  proxysql.cnf: |
+    datadir="/var/lib/proxysql"
+
+    admin_variables=
+    {
+        admin_credentials="admin:admin"
+        mysql_ifaces="0.0.0.0:6032"
+        refresh_interval=2000
+        admin_web_enabled=true
+        admin_web_port=6080
+        admin_web_credentials="admin:admin"
+        admin_web_debug=true
+        restapi_enabled=true
+        restapi_port=6070
+        prometheus_memory_metrics_interval=60
+    }
+
+    mysql_variables=
+    {
+        threads=4
+        max_connections=10
+        default_query_delay=0
+        default_query_timeout=36000000
+        have_compress=true
+        poll_timeout=2000
+        interfaces="0.0.0.0:6033"
+        default_schema="information_schema"
+        stacksize=1048576
+        server_version="5.7.37"
+        connect_timeout_server=30000
+        monitor_history=60000
+        monitor_connect_interval=200000
+        monitor_ping_interval=200000
+        ping_timeout_server=500
+        commands_stats=true
+        sessions_sort=true
+        connect_retries_on_failure=10
+        prometheus_exporter_enabled="true"
+        prometheus_exporter_port="6070"
+    }
+
+    mysql_servers =
+    (
+        {
+            address="mysql"
+            port=3306
+            hostgroup=0
+            max_connections=10
+            weight=1
+        }
+    )
+
+    mysql_users =
+    (
+        {
+            username="proxyuser"
+            password="proxyuser_password"
+            default_hostgroup=0
+            max_connections=10
+            default_schema="information_schema"
+            active=1
+        }
+    )
+
+    mysql_query_rules =
+    (
+        {
+            rule_id=1
+            active=1
+            match_pattern="^SELECT .* FOR UPDATE$"
+            destination_hostgroup=0
+            apply=1
+        },
+        {
+            rule_id=2
+            active=1
+            match_pattern="^SELECT"
+            destination_hostgroup=0
+            apply=1
+        }
+    )

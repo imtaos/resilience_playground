@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-app2-config
+data:
+  ENVIRONMENT: "production"
+  DB_HOST: "proxysql"
+  DB_PORT: "6033"
+  DB_NAME: "blogdb"

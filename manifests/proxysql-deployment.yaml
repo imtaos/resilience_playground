@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxysql
+  template:
+    metadata:
+      labels:
+        app: proxysql
+    spec:
+      containers:
+      - name: proxysql
+        image: proxysql/proxysql:2.7.3
+        ports:
+        - containerPort: 6032
+          name: admin
+        - containerPort: 6033
+          name: mysql
+        - containerPort: 6080
+          name: metrics
+        - containerPort: 6080
+          name: admin-web
+        volumeMounts:
+        - name: proxysql-config
+          mountPath: /etc/proxysql.cnf
+          subPath: proxysql.cnf
+      volumes:
+      - name: proxysql-config
+        configMap:
+          name: proxysql-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxysql
+spec:
+  selector:
+    app: proxysql
+  ports:
+  - name: mysql
+    port: 6033
+    targetPort: 6033
+  - name: admin
+    port: 6032
+    targetPort: 6032
+  - name: metrics
+    port: 6070
+    targetPort: 6070
+  - name: admin-web
+    port: 6080
+    targetPort: 6080
