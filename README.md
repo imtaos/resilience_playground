@@ -18,9 +18,13 @@ Topology
 Deployment
 * kubectl apply -f xxx.yaml
 * create proxysql user (one time)
-```CREATE USER 'proxyuser'@'%' IDENTIFIED WITH mysql_native_password BY 'proxyuser_password';
+
+```
+CREATE USER 'proxyuser'@'%' IDENTIFIED WITH mysql_native_password BY 'proxyuser_password';
 GRANT ALL PRIVILEGES ON *.* TO 'proxyuser'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;```
+FLUSH PRIVILEGES;
+```
+
 * create blogdb (one time)
 ```
 CREATE DATABASE blogdb IF NOT EXISTS;
